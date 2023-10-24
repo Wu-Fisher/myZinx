@@ -9,5 +9,7 @@ type IServer interface {
 	Stop()
 	// Run server
 	Serve()
+	// Add router
+	AddRouter(router IRouter)
 }
 

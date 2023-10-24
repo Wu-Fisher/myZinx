@@ -8,6 +8,10 @@ type IConnection interface {
 	Stop()
 	// Get connection ID
 	GetConnID() uint32
+	// Get TCP connection
+	GetTCPConnection() *net.TCPConn
+	// Get remote client IP address
+	RemoteAddr() net.Addr
 }
 
 

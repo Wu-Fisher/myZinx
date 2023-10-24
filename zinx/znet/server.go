@@ -5,6 +5,7 @@ import(
 	"net"
 	"time"
 	"zinx/ziface"
+	"reflect"
 )
 
 // IServer implementation
@@ -17,6 +18,8 @@ type Server struct {
 	IP string
 	// Server port
 	Port int
+	//
+	Router ziface.IRouter
 }
 
 
@@ -58,7 +61,7 @@ func (s *Server) Start() {
 				fmt.Println("Accept err ", err)
 				continue
 			}
-			dealConn := NewConnection(conn, cid, CallBackToClient)
+			dealConn := NewConnection(conn, cid, s.Router)
 			cid++
 			go dealConn.Start()
 		}
@@ -79,12 +82,19 @@ func (s *Server) Serve() {
 
 }
 
+func (s *Server) AddRouter(router ziface.IRouter) {
+	s.Router = router
+	// fmt.Println("Add Router success!")
+	fmt.Println("Add Router success! ", reflect.TypeOf(router).Name())
+}
+
 func NewServer(name string) ziface.IServer{
 	s:= &Server{
 		Name: name,
 		IPVersion: "tcp4",
 		IP: "0.0.0.0",
 		Port: 7777,
+		Router: nil,
 	}
 
 	return s

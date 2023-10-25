@@ -18,12 +18,16 @@ func main(){
 	}
 
 
+
 	for{
 		_,err :=conn.Write([]byte("hello zinx v0.1"))
 		if err!=nil{
 			fmt.Println("write conn err",err)
 			return
 		}
+
+		time.Sleep(1*time.Second)
+
 		buf := make([]byte,512)
 		cnt,err:=conn.Read(buf)
 		if err!=nil{
@@ -32,7 +36,6 @@ func main(){
 		}
 
 		fmt.Printf("server call back: %s, cnt = %d\n",buf,cnt)
-
 		time.Sleep(1*time.Second)
 		// conn.Close()
 		// break

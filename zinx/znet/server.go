@@ -1,11 +1,12 @@
 package znet
 
-import(
+import (
 	"fmt"
 	"net"
-	"time"
-	"zinx/ziface"
 	"reflect"
+	"time"
+	"zinx/utils"
+	"zinx/ziface"
 )
 
 // IServer implementation
@@ -23,19 +24,20 @@ type Server struct {
 }
 
 
-func CallBackToClient(conn *net.TCPConn,data []byte,cnt int) error{
-	fmt.Println("[Conn Handle] CallBackToClient")
-	if _,err := conn.Write(data[:cnt]);err != nil{
-		fmt.Println("write back buf err ",err)
-		return err
-	}
+// func CallBackToClient(conn *net.TCPConn,data []byte,cnt int) error{
+// 	fmt.Println("[Conn Handle] CallBackToClient")
+// 	if _,err := conn.Write(data[:cnt]);err != nil{
+// 		fmt.Println("write back buf err ",err)
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func (s *Server) Start() {
 
 	fmt.Printf("[Start] Server Listener at IP: %s, Port %d, is starting\n", s.IP, s.Port)
+	fmt.Print("[Zinx] Version ", utils.GlobalObject.Version, " MaxConn ", utils.GlobalObject.MaxConn, " MaxPacketSize ", utils.GlobalObject.MaxPacketSize, "\n")
 	go func(){
 		addr,err := net.ResolveTCPAddr(s.IPVersion, fmt.Sprintf("%s:%d", s.IP, s.Port))
 		if err != nil {
@@ -89,11 +91,14 @@ func (s *Server) AddRouter(router ziface.IRouter) {
 }
 
 func NewServer(name string) ziface.IServer{
+
+	utils.GlobalObject.Reload()
+
 	s:= &Server{
-		Name: name,
+		Name: utils.GlobalObject.Name,
 		IPVersion: "tcp4",
-		IP: "0.0.0.0",
-		Port: 7777,
+		IP: utils.GlobalObject.Host,
+		Port: utils.GlobalObject.TcpPort,
 		Router: nil,
 	}
 
